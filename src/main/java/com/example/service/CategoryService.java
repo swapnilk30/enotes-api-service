@@ -2,11 +2,14 @@ package com.example.service;
 
 import java.util.List;
 
-import com.example.entity.Category;
+import com.example.dto.CategoryDto;
+import com.example.dto.CategoryResponse;
 
 public interface CategoryService {
 	
-	Boolean saveCategory(Category category);
+	Boolean saveCategory(CategoryDto categoryDto);
 
-	List<Category> getAllCategory();
+	List<CategoryDto> getAllCategory();
+
+	List<CategoryResponse> getActiveCategory();
 }
