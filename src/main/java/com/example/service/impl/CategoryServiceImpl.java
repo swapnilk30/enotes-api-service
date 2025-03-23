@@ -28,24 +28,49 @@ public class CategoryServiceImpl implements CategoryService{
 	public Boolean saveCategory(CategoryDto categoryDto) {
 		//dto to entity
 		
-		Category category = new Category();
-		category.setName(categoryDto.getName());
-		category.setDescription(categoryDto.getDescription());
-		category.setIsActive(categoryDto.getIsActive());
+		//Category category = new Category();
+		//category.setName(categoryDto.getName());
+		//category.setDescription(categoryDto.getDescription());
+		//category.setIsActive(categoryDto.getIsActive());
 		
-		category.setIsDeleted(false);
+	
 		
-		category.setCreatedBy(1);
+		//Category saveCategory = categoryRepository.save(category);
 		
-		category.setCreatetOn(new Date());
+		Category category = mapper.map(categoryDto, Category.class);
+		
+		if(ObjectUtils.isEmpty(category.getId())) {
+			category.setIsDeleted(false);
+			
+			category.setCreatedBy(1);
+			
+			category.setCreatetOn(new Date());
+			
+		}else {
+			updateCategory(category);
+		}
 		
 		Category saveCategory = categoryRepository.save(category);
-		
 		
 		if(ObjectUtils.isEmpty(saveCategory)) {
 			return false;
 		}
 		return true;
+	}
+
+	private void updateCategory(Category category) {
+		Integer categoryId = category.getId();
+		Optional<Category> findById = categoryRepository.findById(categoryId);
+		if(findById.isPresent()) {
+			Category existCategory = findById.get();
+			category.setCreatedBy(existCategory.getCreatedBy());
+			category.setCreatetOn(existCategory.getCreatetOn());
+			category.setIsDeleted(existCategory.getIsDeleted());
+			
+			category.setUpdatedBy(1);
+			category.setUpdatedOn(new Date());
+		}
+		
 	}
 
 	@Override
